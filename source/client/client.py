@@ -1,4 +1,5 @@
 import socket
+import os
 
 
 def read_config(filename="config.ini"):
@@ -29,9 +30,21 @@ print('Connected to server:', HOST, PORT)
 # Set timeout
 client_socket.settimeout(5)
 
+# Check if autostart
+if os.path.exists('_autostart.ini'):
+    autostart = True
+    autostart_string = open("_autostart.ini", 'r').read()
+else:
+    AUTOSTART = False
+
+
 # Send data
 while True:
-    message = input('{}:{} @ '.format(config[0], config[1]))
+    if not autostart:
+        message = input('{}:{} @ '.format(config[0], config[1]))
+    elif autostart:
+        message = autostart_string
+        autostart = False
 
     if message.lower() == 'exit' or message.lower() == 'q':
         break
