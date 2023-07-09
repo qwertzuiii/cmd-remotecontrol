@@ -1,5 +1,6 @@
 import socket
 import subprocess
+import sys
 
 
 def run_command(command):
@@ -10,7 +11,14 @@ def run_command(command):
         return e.stderr
 
 
-DEBUG = False
+def change_debug_when_running_as_exe():
+    if getattr(sys, 'frozen', False):  # Running as a standalone executable
+        return False
+    else:  # Running as a script
+        return True
+
+
+DEBUG = change_debug_when_running_as_exe()
 DEBUG_prefix = "[debug-build] "
 
 # Set host and port
