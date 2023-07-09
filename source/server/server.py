@@ -1,6 +1,7 @@
 import socket
 import subprocess
 import sys
+import time
 
 
 def run_command(command):
@@ -64,6 +65,7 @@ def start_server():
 
 while True:
     start_server()
+    time.sleep(5)
 
 # Close connections
 client_socket.close()
