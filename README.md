@@ -12,7 +12,7 @@ Radmin VPN ❔
 Other Direct connection software ❔
 
 
-### You can do some stuff on the computers from friends too, when they execute the server executable.
+### You can do some stuff on the computers from friends, when they execute the server executable.
 ## This program is not made for any malicious activity!
 
 </div>
