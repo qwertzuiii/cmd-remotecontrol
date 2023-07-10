@@ -1,7 +1,9 @@
+import os
 import socket
 import subprocess
 import sys
 import time
+import shlex
 
 
 def run_command(command):
@@ -34,22 +36,40 @@ server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Bind socket on host and port
 server_socket.bind((HOST, PORT))
 
-# set socket listening
-server_socket.listen(1)
-
+# Get server run path
+server_runpath = os.getcwd()
 if DEBUG:
-    print(DEBUG_prefix + 'Server started! Waiting for connection...')
+    print(DEBUG_prefix + 'Server Execute-Path:', server_runpath)
 
-# Accept connection
-client_socket, addr = server_socket.accept()
-if DEBUG:
-    print(DEBUG_prefix + 'Client connected:', addr)
+
+first_start = True
 
 
 # Receive data and send
-def start_server():
+def start_server(first_start_attr=True):
+    # set socket listening
+    server_socket.listen(1)
+
+    if DEBUG:
+        if first_start_attr:
+            print(DEBUG_prefix + 'Server started! Waiting for connection...')
+        else:
+            print(DEBUG_prefix + 'Server restarted, waiting for connection...')
+
+    # Accept connection
+    client_socket, addr = server_socket.accept()
+    if DEBUG:
+        print(DEBUG_prefix + 'Client connected:', addr)
+
+    first_start_attr = False
+
     while True:
-        data = client_socket.recv(1024).decode()  # Receive data
+        try:
+            data = client_socket.recv(1024).decode()  # Receive data
+        except ConnectionResetError as e:
+            if DEBUG:
+                print(DEBUG_prefix + 'Connection Reset:', e)
+            break
 
         if not data:
             break
@@ -57,15 +77,26 @@ def start_server():
         if DEBUG:
             print(DEBUG_prefix + 'Message from client:', data)
 
-        cmd_data = run_command(data)
+        if data.lower().startswith('cd'):
+            splitted_data = shlex.split(data)
+            try:
+                os.chdir(splitted_data[1])
+                cmd_data = 'Changed directory to: ' + str(os.getcwd())
+            except:
+                cmd_data = 'An error occurred while using "cd"'
+        else:
+            cmd_data = run_command(data)
 
-        response = " $ " + cmd_data  # Create answer
+        response = " $ " + str(cmd_data)  # Create answer
         client_socket.send(response.encode())  # Send answer
 
 
 while True:
-    start_server()
-    time.sleep(5)
+    start_server(first_start)
+    if first_start:
+        first_start = False
+    time.sleep(3)
+    os.chdir(server_runpath)
 
 # Close connections
 client_socket.close()
