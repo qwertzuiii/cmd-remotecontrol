@@ -59,7 +59,7 @@ def start_server():
 
         cmd_data = run_command(data)
 
-        response = cmd_data  # Create answer
+        response = " $ " + cmd_data  # Create answer
         client_socket.send(response.encode())  # Send answer
 
 

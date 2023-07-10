@@ -52,6 +52,8 @@ while True:
         socket_timeout = float(input('SOCKET.TIMEOUT = '))
         client_socket.settimeout(socket_timeout)
         continue
+    if message.lower() == "" or message.lower() == " ":
+        continue
 
     replaced_msg = message.replace('$DESKTOP', '%USERPROFILE%\\Desktop')
     replaced_msg = replaced_msg.replace('$DOCUMENTS', '%USERPROFILE%\\Documents')
