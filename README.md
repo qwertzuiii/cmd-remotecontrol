@@ -9,6 +9,8 @@ Hamachi ✔️
 
 Radmin VPN❔
 
+Same Network ✔️
+
 Other Direct connection software❔
 
 
