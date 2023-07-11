@@ -35,7 +35,7 @@ if os.path.exists('_autostart.ini'):
     autostart = True
     autostart_string = open("_autostart.ini", 'r').read()
 else:
-    AUTOSTART = False
+    autostart = False
 
 
 # Send data
