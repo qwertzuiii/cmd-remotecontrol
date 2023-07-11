@@ -60,7 +60,7 @@ else:
 # Send data
 while True:
     if not autostart:
-        message = input('{}:{} @ '.format(str(HOST), str(config[1])))
+        message = input('{}:{} @ '.format(str(HOST), str(PORT)))
     elif autostart:
         message = autostart_string
         autostart = False
