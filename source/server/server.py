@@ -4,6 +4,23 @@ import subprocess
 import sys
 import time
 import shlex
+import netifaces
+
+
+def get_hamachi_ip():
+    interfaces = netifaces.interfaces()
+
+    for interface in interfaces:
+        addresses = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
+
+        if addresses:
+            for addr_info in addresses:
+                ip = addr_info['addr']
+
+                if ip.startswith('25.'):
+                    return ip
+
+    return None
 
 
 def run_command(command):
@@ -29,6 +46,15 @@ import server_config as cfg
 
 HOST = open('_config.ini', 'r').read()  # localhost or 127.0.0.1 for local server
 PORT = cfg.port
+
+# Check, if ".auto@hamachi_ip"
+if HOST == ".auto@hamachi_ip":
+    HOST = get_hamachi_ip()
+    if HOST is None:
+        print("An error occurred: [_config.ini] Couldn't find hamachi ip. Is hamachi active/installed?")
+        sys.exit()
+    if DEBUG:
+        print(DEBUG_prefix + 'Using Hamachi-IP:', HOST)
 
 # Create socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
