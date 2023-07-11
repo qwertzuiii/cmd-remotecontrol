@@ -1,24 +1,43 @@
 import socket
 import os
+import sys
 
 
 def read_config(filename="config.ini"):
-    with open(filename, 'r') as f:
-        cfgdata = f.read()
-    return cfgdata
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            cfgdata = f.read()
+        return cfgdata
+    else:
+        print('An error occurred: [config.ini] Not existing')
+        sys.exit()
 
 
 def split_config(data):
     return data.split('^')
 
-
-config = read_config()
-config = split_config(config)
+default_port = 1823
 
 
 # Set host and port
-HOST = config[0]  # Set IP
-PORT = int(config[1])  # Set Port
+
+# Check if using args
+if len(sys.argv) > 1:
+    HOST = sys.argv[1]
+    if len(sys.argv) > 2:
+        try:
+            PORT = int(sys.argv[2])
+        except ValueError:
+            print('An error occurred: [ValueError] Port is not an integer')
+            sys.exit()
+    else:
+        PORT = default_port
+else:
+    config = read_config()
+    config = split_config(config)
+
+    HOST = config[0]  # Set IP
+    PORT = int(config[1])  # Set Port
 
 # Create socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
