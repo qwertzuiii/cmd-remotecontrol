@@ -8,8 +8,6 @@ import pydlli
 script_path = os.path.abspath(__file__)
 script_folder = os.path.dirname(script_path) + "\\"
 
-print(script_folder)
-
 corelib = pydlli.import_dll(script_folder + "core.dll")  # Loading core.dll
 shutil.rmtree("temp/")  # Removing temp directory, that was created by pydlli
 
