@@ -2,3 +2,4 @@
 ^*
 *__pycache__*
 source/client/config.ini
+source/client/last.sav

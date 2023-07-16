@@ -23,6 +23,14 @@ class MainApp(QMainWindow, QWidget):
         self.ip = None
         self.port = None
 
+        # Set last ip + ports
+        if os.path.exists(script_folder + 'last.sav'):
+            with open(script_folder + 'last.sav', 'r') as sav:
+                save = sav.read()
+                save = save.split('^')
+            self.line_ip.setText(save[0])
+            self.line_port.setText(save[1])
+
         self.button_connect.clicked.connect(self.connect)
 
     def connect(self):
@@ -59,6 +67,8 @@ if __name__ == '__main__':
     if appMain.ip is None or appMain.port is None:
         print('Just exited window')
         sys.exit()
+
+    open(script_folder + 'last.sav', 'w').write(f"{appMain.ip}^{appMain.port}")
 
     os.system('cls')
     corelib["init"](str(appMain.ip), int(appMain.port))
